@@ -1,0 +1,35 @@
+body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .login-box { width:300px; padding:20px; border:1px solid #ccc; border-radius:10px; }
+    .login-box h2 { text-align:center; }
+    .login-box input { width:100%; padding:10px; margin:10px 0; }
+    .login-box button { width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; }
+    .login-box button:hover { background:#45a049; }
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box; /* 패딩, 보더까지 포함해서 width 계산 */
+}
+
+.login-box {
+  width: 90%;              /* 작은 화면에서는 화면의 90% 차지 */
+  max-width: 400px;        /* 큰 화면에서도 최대 400px까지만 */
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
+}
+
+.login-box h2 {
+  font-family: "Anton", sans-serif;
+  font-weight: 400;
+  font-style: normal;   
+  font-size: 50px;
+}
+@media (min-width: 1024px) { /* 데스크탑 기준 */
+  .login-box {
+    max-width: 500px;   /* 데스크탑에서는 좀 더 크게 */
+  }
+}
