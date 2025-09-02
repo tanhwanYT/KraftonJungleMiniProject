@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메인페이지 - Jungle Food</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href = "main.css">
+</head>
+<body>
+  <header>
+    <button class="write-btn">글쓰기</button>
+    <h1>JungleFood</h1>
+    <div class="search-box">
+        <input type="text" placeholder="검색어를 입력하세요">
+        <i class="fa fa-search search-icon"></i>
+      </div>
+  </header>
+
+  <nav class="category-nav">
+    <button onclick="location.href='restaurant.html'">식당</button>
+    <button onclick="location.href='takeout.html'">외식</button>
+    <button onclick="location.href='delivery.html'">배달</button>
+  </nav>
+
+  <main>
+    <section class="latest-posts">
+      <h2>최신글</h2>
+      <ul>
+        <li onclick="location.href='post1.html'">최신글 1</li>
+        <li onclick="location.href='post2.html'">최신글 2</li>
+        <li onclick="location.href='post3.html'">최신글 3</li>
+        <li onclick="location.href='post4.html'">최신글 4</li>
+        <li onclick="location.href='post5.html'">최신글 5</li>
+
+      </ul>
+    </section>
+
+    <aside class="user-container">
+        <div class="user-box">
+          <h3>회원정보</h3>
+          <p>아이디: <span id="userId">example_user</span></p>
+          <button>로그아웃</button>
+          <button>회원정보수정</button>
+        </div>
+      </aside>
+  </main>
+
+  <script src="/miniproject/main_new/main_new.js"></script>
+</body>
+</html>
