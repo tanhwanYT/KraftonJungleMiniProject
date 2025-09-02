@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시물 작성</title>
+  <link rel="stylesheet" href="PostWrite.css">
+</head>
+<body>
+  <header>
+    <h1>게시물 작성</h1>
+    <a href="../main/main.html" class="back-btn">메인으로</a>
+  </header>
+
+  <main>
+    <!-- 제목 입력 -->
+    <input type="text" class="title-input" placeholder="제목을 입력하세요">
+
+    <!-- 내용 입력 -->
+    <div class="content-section">
+      <textarea class="content-input" placeholder="내용을 입력하세요"></textarea>
+      <div class="image-controls">
+        <button type="button" onclick="addImage()">+</button>
+        <button type="button" onclick="removeImage()">−</button>
+      </div>
+    </div>
+
+    <!-- 이미지 업로드 영역 -->
+    <div id="image-upload"></div>
+
+    <!-- 게시판 선택 (아코디언) -->
+    <div class="board-select">
+      <button type="button" class="accordion" onclick="toggleBoardList()">게시판 선택 ▼</button>
+      <div class="panel" id="boardPanel">
+        <label><input type="radio" name="board" value="Cafeteria"> 식당</label><br>
+        <label><input type="radio" name="board" value="Outside"> 외식</label><br>
+        <label><input type="radio" name="board" value="Delivery"> 배달</label><br>
+      </div>
+    </div>
+
+    <!-- 버튼 -->
+    <div class="button-group">
+      <button type="button" onclick="location.href='../main/main.html'">취소</button>
+      <button type="button" onclick="postArticle()">게시</button>
+    </div>
+  </main>
+
+  <script>
+    function addImage() {
+      const container = document.getElementById("image-upload");
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      container.appendChild(input);
+    }
+
+    function removeImage() {
+      const container = document.getElementById("image-upload");
+      if (container.lastChild) {
+        container.removeChild(container.lastChild);
+      }
+    }
+
+    function toggleBoardList() {
+      const panel = document.getElementById("boardPanel");
+      panel.style.display = (panel.style.display === "block") ? "none" : "block";
+    }
+
+    function postArticle() {
+      const title = document.querySelector(".title-input").value;
+      const content = document.querySelector(".content-input").value;
+      const board = document.querySelector("input[name='board']:checked");
+
+      if (!title || !content || !board) {
+        alert("제목, 내용, 게시판을 모두 입력하세요!");
+        return;
+      }
+
+      alert(`${board.value} 게시판에 글이 게시되었습니다!`);
+      location.href = "../main/main.html";
+    }
+  </script>
+</body>
+</html>
