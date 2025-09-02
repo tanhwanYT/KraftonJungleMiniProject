@@ -1,14 +1,28 @@
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
 
-      // 임시 계정 (실제로는 서버에서 확인해야 함)
-      if(username === "admin" && password === "1234") {
-        localStorage.setItem("loggedIn", "true"); // 로그인 상태 저장
-        window.location.href = "main.html"; // 로그인 성공 시 이동
-      } else {
-        document.getElementById("error").textContent = "아이디 또는 비밀번호가 올바르지 않습니다.";
-      }
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      credentials: "include", // 쿠키(세션) 사용 시
+      body: JSON.stringify({ username, password })
     });
+
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem("loggedIn", "true");
+      window.location.href = "main.html";
+    } else {
+      alert("아이디 또는 비밀번호가 올바르지 않습니다."); // DB에 없거나 틀린 경우
+    }
+  } 
+  catch (err) {
+    console.error(err);
+    alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+  }
+});
