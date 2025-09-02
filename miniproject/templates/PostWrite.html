@@ -40,7 +40,7 @@
 
     <!-- 버튼 -->
     <div class="button-group">
-      <button type="button" onclick="location.href='../main/main.html'">취소</button>
+      <button type="button" onclick="location.href='../main/main.html'">취소</button> <!-- 메인 html로 가는 버튼--> 
       <button type="button" onclick="postArticle()">게시</button>
     </div>
   </main>
@@ -67,7 +67,7 @@
     }
 
     function postArticle() {
-      const title = document.querySelector(".title-input").value;
+const title = document.querySelector(".title-input").value;
     const content = document.querySelector(".content-input").value;
     const board = document.querySelector("input[name='board']:checked");
 
@@ -101,7 +101,7 @@
     localStorage.setItem("posts", JSON.stringify(posts));
 
     alert(`${board.value} 게시판에 글이 게시되었습니다!`);
-    location.href = "../main/main.html";
+    location.href = "../main/main.html"; // 메인으로 가는 명령어
   }
   </script>
 </body>
