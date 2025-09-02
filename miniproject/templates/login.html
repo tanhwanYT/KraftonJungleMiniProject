@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8"><title>로그인</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+<body>
+  <h2>로그인</h2>
+  <form id="loginForm">
+    <input id="username" placeholder="아이디" required>
+    <input id="password" type="password" placeholder="비밀번호" required>
+    <button type="submit">로그인</button>
+  </form>
+
+  <script>
+  const LOGIN_API = "{{ url_for('login_api') }}";
+  const MAIN_PAGE = "{{ url_for('main_page') }}";
+
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      const res = await fetch(LOGIN_API, {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      if (!res.ok) { alert("서버 오류"); return; }
+      const data = await res.json();
+      data.success ? location.href = MAIN_PAGE
+                   : alert("아이디 또는 비밀번호가 올바르지 않습니다.");
+    } catch (err) {
+      console.error(err); alert("네트워크 오류");
+    }
+  });
+  </script>
+</body>
+</html>
+

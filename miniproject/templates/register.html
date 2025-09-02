@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head><meta charset="UTF-8"><title>회원가입</title></head>
+<body>
+  <h2>회원가입</h2>
+  <form id="registerForm">
+    <input id="username" placeholder="아이디" required>
+    <input id="password" type="password" placeholder="비밀번호" required>
+    <input id="confirm"  type="password" placeholder="비밀번호 확인" required>
+    <button type="submit">가입하기</button>
+    <div id="msg" style="margin-top:8px;color:#e74c3c"></div>
+  </form>
+
+  <script>
+  const REGISTER_API = "{{ url_for('register_api') }}";
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirm  = document.getElementById("confirm").value;
+    const msg = document.getElementById("msg");
+    msg.textContent = "";
+
+    try {
+      const res = await fetch(REGISTER_API, {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ username, password, confirm })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert("회원가입이 완료되었습니다. 로그인해 주세요.");
+        location.href = "{{ url_for('login_page') }}";
+      } else {
+        msg.textContent = data.msg || "회원가입에 실패했습니다.";
+      }
+    } catch (err) {
+      console.error(err); msg.textContent = "서버 오류가 발생했습니다.";
+    }
+  });
+  </script>
+</body>
+</html>
+

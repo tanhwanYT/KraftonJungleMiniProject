@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메인페이지 - Jungle Food</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Flask의 static 폴더를 쓰는 경우 -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <!-- 정적 경로를 아직 안 옮기셨다면 위 줄 대신 원래 경로 유지: <link rel="stylesheet" href="main.css"> -->
+ <style>
+   .side-auth {
+     position: fixed;
+     right: 24px;
+     top: 50%;
+     transform: translateY(-50%);
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+     z-index: 1000;
+   }
+   .side-auth .btn {
+     display: inline-block;
+     padding: 10px 16px;
+     background: #113f13;
+     color: #fff;
+     border-radius: 8px;
+     text-decoration: none;
+     font-weight: 600;
+     box-shadow: 0 2px 8px rgba(0,0,0,.15);
+     text-align: center;
+   }
+   .side-auth .btn:hover { background:#53dd5c; color:#000; }
+   .side-auth .btn.outline {
+     background: transparent;
+     color: #113f13;
+     border: 2px solid #113f13;
+   }
+   .side-auth .btn.outline:hover { background:#113f13; color:#fff; }
+</style>
+</head>
+<body>
+  <header>
+    <button class="write-btn">글쓰기</button>
+    <h1>Jungle Food</h1>
+    <div class="search-box">
+      <input type="text" placeholder="검색어를 입력하세요">
+      <i class="fa fa-search search-icon"></i>
+    </div>
+  </header>
+
+  <nav class="category-nav">
+    <a href="../place/Cafateria.html"><button>식당</button></a>
+    <a href="../place/Outside.html"><button>외식</button></a>
+    <a href="../place/Delivery.html"><button>배달</button></a>
+  </nav>
+
+  <main>
+    <section class="latest-posts">
+      <h2>최신글</h2>
+      <ul>
+        <li onclick="location.href='post1.html'">최신글 1</li>
+        <li onclick="location.href='post2.html'">최신글 2</li>
+        <li onclick="location.href='post3.html'">최신글 3</li>
+        <li onclick="location.href='post4.html'">최신글 4</li>
+        <li onclick="location.href='post5.html'">최신글 5</li>
+      </ul>
+    </section>
+
+    <!-- ✅ 로그인 여부에 따라 표시 분기 -->
+    {% if session.get('user') %}
+     <aside class="user-container">
+       <div class="user-box">
+         <h3>회원정보</h3>
+         <p>아이디: <span id="userId">{{ session.user.username }}</span></p>
+
+         <button onclick="location.href='{{ url_for('logout') }}'">로그아웃</button>
+	 <button onclick="location.href='{{ url_for('logout') }}'">회원탈퇴</button>
+
+      {# 프로필 페이지 라우트가 이미 있다면 ↓ 주석 해제해서 사용하세요 #}
+      {# <button onclick="location.href='{{ url_for('profile_page') }}'">회원정보수정</button> #}
+       </div>
+     </aside>
+    {% else %}
+  <!-- 비로그인 상태: 우측에 로그인/회원가입 버튼 표시 -->
+      <div class="side-auth">
+        <a class="btn" href="{{ url_for('login_page') }}">로그인</a>
+        <a class="btn outline" href="{{ url_for('register_page') }}">회원가입</a>
+      </div>
+    {% endif %}
+  </main>
+
+  <!-- Flask static 사용 -->
+  <script src="{{ url_for('static', filename='js/main_new.js') }}" defer></script>
+  <!-- 정적 경로를 아직 안 옮기셨다면 위 줄 대신 원래 경로 유지: <script src="/miniproject/main_new/main_new.js" defer></script> -->
+</body>
+</html>
