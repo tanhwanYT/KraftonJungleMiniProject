@@ -1,0 +1,134 @@
+body {
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+    background: #3f3f3f;
+  }
+  
+  header {
+    background: #333;
+    color: #7bff69;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  header h1 {
+    margin: 0;
+  }
+  
+  header .back-btn {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    background: #3cf574;
+    padding: 6px 10px;
+    border-radius: 4px;
+  }
+  
+  main {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #474747;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .title-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .content-section {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .content-input {
+    flex: 1;
+    min-height: 200px;
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+  }
+  
+  .image-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .image-controls button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .image-controls button:hover {
+    background: #0056b3;
+  }
+  
+  #image-upload {
+    margin: 15px 0;
+  }
+  
+  .board-select {
+    margin: 15px 0;
+  }
+  
+  .accordion {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 5px;
+  }
+  
+  .panel {
+    display: none;
+    padding: 10px;
+    background: #f9f9f9;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .button-group button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button-group button:first-child {
+    background: #ff5858;
+    color: white;
+  }
+  
+  .button-group button:last-child {
+    background: #28a745;
+    color: white;
+  }
+  
