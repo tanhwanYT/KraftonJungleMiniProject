@@ -46,7 +46,11 @@
 </head>
 <body>
   <header>
-    <button class="write-btn" onclick()="location.href = '../templates/PostWrite.html;'">글쓰기</button>
+    <button type="button"
+        class="write-btn"
+        onclick="location.href='{{ url_for('write_page') }}'">
+        글쓰기
+    </button>
     <h1>Jungle Food</h1>
     <div class="search-box">
       <input type="text" placeholder="검색어를 입력하세요">
@@ -63,35 +67,37 @@
   <main>
     <section class="latest-posts">
       <h2>최신글</h2>
-      <ul id="post-list"></ul>
+      <ul id="post-list">
+        <!-- 최신글이 추가될 위치 -->
+      </ul>
     </section>
 
     <!-- ✅ 로그인 여부에 따라 표시 분기 -->
   
     <script>
-      window.addEventListener("DOMContentLoaded", () => {
-        let posts = JSON.parse(localStorage.getItem("posts")) || [];
-        const postList = document.getElementById("post-list");
-    
-        postList.innerHTML = "";
-        posts.forEach((post, index) => {
-          const li = document.createElement("li");
-          li.textContent = post.title;
-          li.onclick = () => {
-            // 상세 페이지에 어떤 글을 열지 저장
-            localStorage.setItem("currentPost", index);
-            location.href = "PostView.html";
-          };
-          postList.appendChild(li);
-        });
-      });
-    </script>
+window.addEventListener("DOMContentLoaded", () => {
+  const posts = JSON.parse(localStorage.getItem("posts")) || [];
+  const postList = document.getElementById("post-list");
+
+  postList.innerHTML = "";
+  posts.forEach((post, index) => {
+    const li = document.createElement("li");
+    li.textContent = post.title;
+    li.onclick = () => {
+      // 인덱스를 쿼리로 넘기고, Flask 라우트로 이동
+      location.href = "{{ url_for('post_view_page') }}?i=" + index;
+    };
+    postList.appendChild(li);
+  });
+});
+  </script>
+
 {% if user %}
   
 <aside class="user-container">
     <div class="user-box">
       <h3>회원정보</h3>
-      <p>아이디: <span id="userId">{{ user.username }}</span></p>
+      <p><span id="userId">{{ user.username }}</span>님 환영합니다!!</p>
 
       <!-- GET으로 /logout 이동 - 인라인 스타일로 버튼처럼 꾸미기 -->
       <a class="btn danger" 
