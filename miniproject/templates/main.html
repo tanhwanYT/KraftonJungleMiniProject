@@ -63,17 +63,29 @@
   <main>
     <section class="latest-posts">
       <h2>최신글</h2>
-      <ul>
-        <li onclick="location.href='post1.html'">글 제목</li>
-        <li onclick="location.href='post2.html'">글 제목</li>
-        <li onclick="location.href='post3.html'">글 제목</li>
-        <li onclick="location.href='post4.html'">글 제목</li>
-        <li onclick="location.href='post5.html'">글 제목</li>
-      </ul>
+      <ul id="post-list"></ul>
     </section>
 
     <!-- ✅ 로그인 여부에 따라 표시 분기 -->
+  
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        let posts = JSON.parse(localStorage.getItem("posts")) || [];
+        const postList = document.getElementById("post-list");
     
+        postList.innerHTML = "";
+        posts.forEach((post, index) => {
+          const li = document.createElement("li");
+          li.textContent = post.title;
+          li.onclick = () => {
+            // 상세 페이지에 어떤 글을 열지 저장
+            localStorage.setItem("currentPost", index);
+            location.href = "PostView.html";
+          };
+          postList.appendChild(li);
+        });
+      });
+    </script>
 {% if user %}
   
 <aside class="user-container">
