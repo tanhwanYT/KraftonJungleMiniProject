@@ -1,5 +1,5 @@
 body {
-    font-family: "Noto Serif KR", Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     background-color: #252525;
     color: #fff;
@@ -45,7 +45,7 @@ body {
   .category-nav button {
     padding: 15px 80px;
     border-radius: 5px;
-    font-family: "Noto Serif KR", Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     border: none;
     cursor: pointer;
     background-color: #64d664;
