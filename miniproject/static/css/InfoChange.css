@@ -1,0 +1,78 @@
+/* 기본 스타일 */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+  }
+  
+  /* 상단 버튼 바 */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+  }
+  
+  /* 버튼 공통 스타일 */
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.3s;
+  }
+  
+  /* 취소 버튼 */
+  .cancel-btn {
+    background: #ff6b6b;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background: #ff4757;
+  }
+  
+  /* 완료 버튼 */
+  .submit-btn {
+    background: linear-gradient(45deg, #42e695, #3bb2b8);
+    color: white;
+  }
+  
+  .submit-btn:hover {
+    opacity: 0.85;
+  }
+  
+  /* 제목 */
+  .title {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  /* 폼 컨테이너 */
+  .form-container {
+    width: 320px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-container label {
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .form-container input {
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+  }
+  

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 상세 - JungleFood</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="../static/css/PostView.css">
+</head>
+<body class="has-background-dark has-text-white">
+
+  <!-- 헤더 -->
+  <header class="navbar has-background-dark p-3">
+    <div class = "title">
+        <h1 class="title has-text-success">게시글 상세</h1>
+    </div>
+    <a href="../templates/main.html" class="button is-info is-small">메인으로</a>
+  </header>
+  
+  <main class="container mt-5">
+    <!-- 게시글 제목 + 작성자 -->
+    <div class="level">
+      <div class="level-left">
+        <h2 class="title is-3 has-text-white">게시글 제목</h2>
+      </div>
+      <div class="level-right">
+        <p class="subtitle is-6 has-text-grey-light">작성자: example_user</p>
+      </div>
+    </div>
+
+    <!-- 글 내용 -->
+    <div class="box has-background-grey-darker has-text-white">
+      <p>여기에 게시글 내용이 들어갑니다. 여러 줄의 텍스트도 잘 보입니다.</p>
+    </div>
+
+    <!-- 이미지 영역 -->
+    <div class="box has-background-grey-darker has-text-white mt-3">
+      <p>이미지가 올라올 예정</p>
+      <!-- 나중에 <img src="..." /> 로 교체 -->
+    </div>
+
+    <!-- 좋아요 버튼 -->
+    <div class="field mt-3">
+      <button id="like-btn" class="button is-light">
+        <span class="icon">
+          <i id="like-icon" class="far fa-heart"></i>
+        </span>
+        좋아요
+      </button>
+    </div>
+
+    <!-- 댓글 입력 -->
+    <div class="field mt-3">
+      <label class="label has-text-white">댓글 작성</label>
+      <div class="control">
+        <textarea id="comment-input" class="textarea" placeholder="댓글을 입력하세요"></textarea>
+      </div>
+      <div class="control mt-2">
+        <button id="comment-btn" class="button is-success">댓글 달기</button>
+      </div>
+    </div>
+
+    <!-- 댓글 목록 -->
+    <div id="comment-list" class="mt-4">
+      <!-- 댓글이 여기에 추가됨 -->
+    </div>
+  </main>
+
+  <!-- FontAwesome 아이콘 -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- 댓글 & 좋아요 JS -->
+  <script>
+    const likeBtn = document.getElementById('like-btn');
+    const likeIcon = document.getElementById('like-icon');
+
+    likeBtn.addEventListener('click', () => {
+    if (likeIcon.classList.contains('far')) {
+    likeIcon.classList.remove('far');
+    likeIcon.classList.add('fas', 'has-text-danger'); // 빨간 하트
+    } else {
+    likeIcon.classList.remove('fas', 'has-text-danger');
+    likeIcon.classList.add('far', 'has-text-grey'); // 회색 하트
+    }
+    });
+
+    const commentBtn = document.getElementById('comment-btn');
+    const commentInput = document.getElementById('comment-input');
+    const commentList = document.getElementById('comment-list');
+
+    commentBtn.addEventListener('click', () => {
+      const commentText = commentInput.value.trim();
+      if (!commentText) return;
+
+      const commentBox = document.createElement('div');
+      commentBox.className = 'box has-background-grey-darker has-text-white mt-2';
+      commentBox.innerHTML = `
+        <p class="subtitle is-6 has-text-grey-light">example_user</p>
+        <p>${commentText}</p>
+      `;
+      commentList.prepend(commentBox);
+      commentInput.value = '';
+    });
+  </script>
+</body>
+</html>
