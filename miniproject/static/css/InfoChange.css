@@ -17,13 +17,16 @@ body {
   
   /* 버튼 공통 스타일 */
   .btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    font-family: 'Orbit', sans-serif; 
+    text-transform: uppercase;
     font-weight: bold;
-    font-size: 14px;
-    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    color: #0ff;
+    background: #111;
+    box-shadow: 0 0 5px #0ff, 0 0 10px #0ff inset;
   }
   
   /* 취소 버튼 */
