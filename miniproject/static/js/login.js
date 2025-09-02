@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ username, password })
       });
 
-      if (!res.ok) { alert("서버 오류"); return; }
+      if (!res.ok) { alert("!!!"); return; }
 
       const data = await res.json();
       if (data.success) window.location.href = MAIN_PAGE;

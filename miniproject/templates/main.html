@@ -27,18 +27,18 @@
    .side-auth .btn {
      display: inline-block;
      padding: 10px 16px;
-     background: #113f13;
+     background: #37b43dff;
      color: #fff;
      border-radius: 8px;
      text-decoration: none;
      font-weight: 600;
-     box-shadow: 0 2px 8px rgba(0,0,0,.15);
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 1);
      text-align: center;
    }
    .side-auth .btn:hover { background:#53dd5c; color:#000; }
    .side-auth .btn.outline {
      background: transparent;
-     color: #113f13;
+     color: #ffffffff;
      border: 2px solid #113f13;
    }
    .side-auth .btn.outline:hover { background:#113f13; color:#fff; }
@@ -73,26 +73,32 @@
     </section>
 
     <!-- ✅ 로그인 여부에 따라 표시 분기 -->
-    {% if session.get('user') %}
-     <aside class="user-container">
-       <div class="user-box">
-         <h3>회원정보</h3>
-         <p>아이디: <span id="userId">{{ session.user.username }}</span></p>
+    
+{% if user %}
+  <aside class="user-container">
+    <div class="user-box">
+      <h3>회원정보</h3>
+      <p>아이디: <span id="userId">{{ user.username }}</span></p>
 
-         <button onclick="location.href='{{ url_for('logout') }}'">로그아웃</button>
-	 <button onclick="location.href='{{ url_for('logout') }}'">회원탈퇴</button>
+      <!-- GET으로 /logout 이동 - danger 스타일 적용 -->
+      <a class="btn danger" href="{{ url_for('logout') }}">로그아웃</a>
 
-      {# 프로필 페이지 라우트가 이미 있다면 ↓ 주석 해제해서 사용하세요 #}
-      {# <button onclick="location.href='{{ url_for('profile_page') }}'">회원정보수정</button> #}
-       </div>
-     </aside>
-    {% else %}
+      <!-- POST로 회원탈퇴: 삭제는 반드시 POST -->
+      <form method="post"
+            action="{{ url_for('delete_account') }}"
+            onsubmit="return confirm('정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.');"
+            style="margin-top:8px">
+        <button type="submit" class="btn danger">회원탈퇴</button>
+      </form>
+    </div>
+  </aside>
+{% else %}
   <!-- 비로그인 상태: 우측에 로그인/회원가입 버튼 표시 -->
-      <div class="side-auth">
-        <a class="btn" href="{{ url_for('login_page') }}">로그인</a>
-        <a class="btn outline" href="{{ url_for('register_page') }}">회원가입</a>
-      </div>
-    {% endif %}
+  <div class="side-auth">
+    <a class="btn" href="{{ url_for('login_page') }}">로그인</a>
+    <a class="btn outline" href="{{ url_for('register_page') }}">회원가입</a>
+  </div>
+{% endif %}
   </main>
 
   <!-- Flask static 사용 -->
