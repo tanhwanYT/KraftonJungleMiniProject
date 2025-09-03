@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev_secret")
 
 # ── MongoDB 연결 ──
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/miniproject")
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27018/miniproject")
 try:
     mongo = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
     mongo.admin.command("ping")  # 연결 테스트
