@@ -1,91 +1,137 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>외식 갤러리 - Jungle Food</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/Outside.css') }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
-    rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/Outside.css') }}"/>
+
+  <!-- Kakao Map SDK: autoload 비활성화 후 load 콜백에서 초기화 -->
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=602f6de5c313013c3c677ff954acc4d0&libraries=services&autoload=false" defer></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet"/>
 </head>
 <body>
   <header>
     <h1>Restaurant</h1>
     <a href="{{ url_for('main_page') }}" class="back-btn">메인으로</a>
   </header>
-  
-  <div id="map" style="width:100%;height:350px;"></div>
-  <!-- Kakao Map SDK -->
-     <main>
-      <section class="board-posts">
-        <h3>Article</h3>
-          <ul id="post-list">
-          </ul>
-       </section>
-     </main>
+
+  <div id="map"></div>
+
+  <main>
+    <section class="board-posts">
+      <h3>Article</h3>
+      <!-- 필요 시 게시판별로 나누어 보여주고 싶다면 아래 UL을 두 개로 분리하세요 -->
+      <ul id="post-list"></ul>
+    </section>
+  </main>
+
   <script>
-  function loadPosts() {
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-    const tbody = document.getElementById("postList");
-    tbody.innerHTML = "";
+    // 공용 유틸
+    function escapeHtml(s){
+      return (s||"")
+        .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;").replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+    }
 
-    // Delivery 게시판 글만 필터링
-    const deliveryPosts = posts.filter(p => p.board === "Delivery");
+    // Kakao 지도 초기화 (SDK 로드 완료 후 실행)
+    function initMap(){
+      const mapContainer = document.getElementById('map');
+      if (!mapContainer) return;
 
-    deliveryPosts.forEach((post, idx) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${post.title}</td>
-        <td>${post.created_at}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
+      const mapOption = {
+        center: new kakao.maps.LatLng(37.269703996199404, 127.20784395278321),
+        level: 4
+      };
+      const map = new kakao.maps.Map(mapContainer, mapOption);
+      const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+      const ps = new kakao.maps.services.Places(map);
 
+      // 카테고리: 음식점(FD6), 편의점(CS2)
+      const cb = (data, status) => {
+        if (status !== kakao.maps.services.Status.OK) return;
+        data.forEach(place => {
+          const marker = new kakao.maps.Marker({
+            map,
+            position: new kakao.maps.LatLng(place.y, place.x)
+          });
+          kakao.maps.event.addListener(marker, 'click', () => {
+            infowindow.setContent('<div style="padding:5px;font-size:12px;">' + escapeHtml(place.place_name) + '</div>');
+            infowindow.open(map, marker);
+          });
+        });
+      };
 
-  window.addEventListener("DOMContentLoaded", async () => {
-    const res = await fetch(`/api/posts?board=Delivery&page=1&per_page=10`);
-    const json = await res.json();
-    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
+      ps.categorySearch('FD6', cb, { useMapBounds: true });
+      ps.categorySearch('CS2', cb, { useMapBounds: true });
 
-    const list = document.getElementById("post-list");
-    list.innerHTML = "";
-    json.data.items.forEach(p => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
-          <div class="title-text">${escapeHtml(p.title)}</div>
-          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
-        </a>`;
-      list.appendChild(li);
-    });
+      // 기준점(필요 시)
+      new kakao.maps.Marker({
+        map,
+        position: new kakao.maps.LatLng(37.269703996199404, 127.20784395278321)
+      });
+    }
 
-    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-  });
+    // 게시글 렌더
+    async function renderPosts({ board = "Delivery", page = 1, perPage = 10 } = {}){
+      const list = document.getElementById("post-list");
+      if (!list) return;
 
-  loadPosts();
-  window.addEventListener("DOMContentLoaded", async () => {
-    const res = await fetch(`/api/posts?board=Cafeteria&page=1&per_page=10`);
-    const json = await res.json();
-    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
+      list.innerHTML = "<li>불러오는 중...</li>";
 
-    const list = document.getElementById("post-list");
-    list.innerHTML = "";
-    json.data.items.forEach(p => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
-          <div class="title-text">${escapeHtml(p.title)}</div>
-          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
-        </a>`;
-      list.appendChild(li);
-    });
+      try {
+        const res = await fetch(`/api/posts?board=${encodeURIComponent(board)}&page=${page}&per_page=${perPage}`);
+        const json = await res.json();
+        if (!res.ok || !json.success) throw new Error("API 실패");
 
-    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+        list.innerHTML = "";
+        json.data.items.forEach(p => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+              <!-- 썸네일이 있다면 <img class="thumb" src="..." alt=""> 사용 -->
+              <div class="post-info">
+                <div class="title-text">${escapeHtml(p.title)}</div>
+                <div class="meta-row">📂 ${escapeHtml(p.board)} &nbsp;|&nbsp; 👤 ${escapeHtml(p.author)} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+              </div>
+            </a>`;
+          list.appendChild(li);
+        });
+
+        if (json.data.items.length === 0){
+          list.innerHTML = "<li>게시글이 없습니다.</li>";
+        }
+      } catch (e){
+        console.warn(e);
+        list.innerHTML = "<li>목록을 불러오지 못했습니다.</li>";
+      }
+    }
+
+    // DOM 준비되면: SDK 로드 후 지도 → 게시글
+    document.addEventListener("DOMContentLoaded", () => {
+      // Kakao SDK가 defer로 로드되므로, kakao가 존재하는 시점에 load 호출
+      if (window.kakao && kakao.maps && kakao.maps.load){
+        kakao.maps.load(initMap);
+      } else {
+        // 혹시 모를 지연 대비
+        const t = setInterval(() => {
+          if (window.kakao && kakao.maps && kakao.maps.load){
+            clearInterval(t);
+            kakao.maps.load(initMap);
+          }
+        }, 50);
+        setTimeout(() => clearInterval(t), 5000);
+      }
+
+      // 하나의 보드만 보여줄 경우
+      renderPosts({ board: "Delivery", page: 1, perPage: 10 });
+
+      // 두 개 보드를 모두 보여주고 싶다면 UL을 두 개로 나누거나,
+      // 여기서 이어서 다른 컨테이너에 renderPosts({ board: "Cafeteria" })를 호출하세요.
     });
   </script>
 </body>

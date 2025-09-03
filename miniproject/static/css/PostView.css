@@ -1,6 +1,8 @@
-body {
-    height: 100%;
-    background-color: #000000;
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #000000; /* 검정색으로 통일 */
   }
   /* 제목과 버튼 간격 */
   .title {
