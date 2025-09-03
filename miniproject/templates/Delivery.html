@@ -107,6 +107,27 @@ function startRoulette() {
   }
 
   spin();
+
+  function loadPosts() {
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const tbody = document.getElementById("postList");
+    tbody.innerHTML = "";
+
+    // Delivery 게시판 글만 필터링
+    const deliveryPosts = posts.filter(p => p.board === "Delivery");
+
+    deliveryPosts.forEach((post, idx) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${post.title}</td>
+        <td>${post.created_at}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  loadPosts();
 }
   </script>
 

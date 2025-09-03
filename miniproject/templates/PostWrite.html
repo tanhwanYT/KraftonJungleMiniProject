@@ -101,6 +101,31 @@
         return;
       }
 
+      let posts = JSON.parse(localStorage.getItem('posts') || '[]');
+
+    // 새로운 게시물 추가
+    const newPost = {
+    id: Date.now(), // 임시 고유 ID
+    title: title,
+    content: content,
+    board: board,
+    created_at: new Date().toISOString().slice(0, 10) // YYYY-MM-DD
+    };
+    posts.push(newPost);
+
+// 다시 localStorage에 저장
+    localStorage.setItem('posts', JSON.stringify(posts));
+
+  alert('게시되었습니다!'); 
+// 게시판 페이지로 이동
+    if (board === "Delivery") {
+      location.href = "Delivery.html";    
+    } else if (board === "Cafeteria") {
+      location.href = "Cafeteria.html";
+    } else if (board === "Outside") {
+      location.href = "Outside.html";
+    }
+});
       // 파일 용량(5MB) 클라이언트 검증(선택)
       if (imgInput.files && imgInput.files.length) {
         for (const f of imgInput.files) {

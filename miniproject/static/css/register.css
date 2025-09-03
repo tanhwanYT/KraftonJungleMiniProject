@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #2e2e2e;
+    margin: 0;
+  }
+  
+  form {
+    width: 90%;
+    max-width: 400px;
+    padding: 30px;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    background: #000000;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  
+  h2 {
+    text-align: center;
+    font-family: "Anton", sans-serif;
+    font-weight: 400;
+    font-size: 45px;
+    color: #24cf0d;
+    margin-bottom: 20px;
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border: none;
+    background: #333;
+    color: #fff;
+    box-sizing: border-box;
+  }
+  
+  input:focus {
+    outline: 2px solid #24cf0d;
+    background: #444;
+  }
+  
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #113f13;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #53dd5c;
+    color: #000;
+  }
+  
+  #msg {
+    margin-top: 12px;
+    color: #e74c3c;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* 데스크탑에서 조금 더 크게 */
+  @media (min-width: 1024px) {
+    form {
+      max-width: 500px;
+    }
+  }
+  

@@ -60,6 +60,28 @@
     // 1초마다 업데이트
     setInterval(updateTimer, 1000);
     updateTimer(); // 페이지 로딩 시 바로 실행
+
+    function loadPosts() {
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const tbody = document.getElementById("postList");
+    tbody.innerHTML = "";
+    
+    const deliveryPosts = posts.filter(p => p.board === "Cafateria");
+
+    deliveryPosts.forEach((post, idx) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${post.title}</td>
+        <td>${post.created_at}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 페이지 로드 시 실행
+  loadPosts();
+
   </script>
 
   <main>

@@ -57,6 +57,28 @@
     mapContainer.style.width = '1500px';
     mapContainer.style.height = '350px'; 
     map.relayout();
+
+    function loadPosts() {
+    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+    const tbody = document.getElementById("postList");
+    tbody.innerHTML = "";
+
+    const deliveryPosts = posts.filter(p => p.board === "Outside");
+
+    deliveryPosts.forEach((post, idx) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${post.title}</td>
+        <td>${post.created_at}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // 페이지 로드 시 실행
+  loadPosts();
+
   </script>
 
     <table class="post-list">
