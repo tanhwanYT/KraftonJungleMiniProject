@@ -117,14 +117,8 @@
     localStorage.setItem('posts', JSON.stringify(posts));
 
   alert('게시되었습니다!'); 
-// 게시판 페이지로 이동
-    if (board === "Delivery") {
-      location.href = "Delivery.html";    
-    } else if (board === "Cafeteria") {
-      location.href = "Cafeteria.html";
-    } else if (board === "Outside") {
-      location.href = "Outside.html";
-    }
+// 메인 페이지로 이동
+
 });
       // 파일 용량(5MB) 클라이언트 검증(선택)
       if (imgInput.files && imgInput.files.length) {
