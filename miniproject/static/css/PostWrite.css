@@ -2,7 +2,7 @@ body {
     font-family: Arial;
     margin: 0;
     padding: 0;
-    background: #3f3f3f;
+    background: #050505;
   }
   
   header {
@@ -12,20 +12,37 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+
   }
   
   header h1 {
     margin: 0;
   }
-  
+  a.btn {
+    padding:10px 16px; 
+    border:1px solid #ccc; 
+    border-radius:8px;
+    background:#ff0ed7; 
+    color: #000000;
+  }
+  .board-select {
+    margin:16px 0;
+    color: #f9f9f9;
+    border: 1px solid white;
+    border-radius: 4px;
+    background-color: #333;
+    padding: 7px;
+  }
   header .back-btn {
-    color: #fff;
+    color: #000000;
     text-decoration: none;
     font-size: 14px;
-    background: #3cf574;
+    background: #00db42;
     padding: 6px 10px;
     border-radius: 4px;
   }
+
   
   main {
     max-width: 800px;

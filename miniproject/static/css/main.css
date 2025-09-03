@@ -1,5 +1,7 @@
 body {
-    font-family: 'Orbit', sans-serif;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
     margin: 0;
     background-color: #252525;
     color: #fff;
@@ -36,24 +38,27 @@ body {
   }
   
   .category-nav {
-    font-size: 20px; 
-    min-width: 200px; 
-    min-height: 60px; 
-    padding: 0 30px;
     display: flex;
+    gap: 10px;
+    align-items: center;
     justify-content: center;
-    gap: 50px;
-    padding: 20px 0;
-    margin: 0 auto;
+    flex-wrap: wrap;
+    margin: 16px 0 20px;
+    border-radius: 3px;
   }
   
   .category-nav button {
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
     padding: 15px 80px;
     border-radius: 8px;
+    width: 170px;
+    height: 60px;
   }
   
   .category-nav button:hover {
-    color: #fff;
+    color: #000000;
     background: #0ff;
     box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
   }
@@ -101,6 +106,9 @@ body {
     flex-direction: column; 
     gap: 10px;
     flex: 1; 
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
   }
   
   .user-box {
@@ -112,24 +120,32 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
   }
   
   
   .user-box h3 {
-    margin-top: 0;
+    margin-top: 5;
   }
   
-  .user-box button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 3px;
-    background-color: #4CAF50;
+  .user-box button {    /*회원 탈퇴 버튼*/
     color: white;
     cursor: pointer;
+    display: inline-block; padding: 8px 16px; margin: 1px 2px;
+    background-color: #dc3545; color: white; text-decoration: none;
+    border-radius: 4px; text-align: center; font-size: 14px;
+    transition: background-color 0.3s;
+    width: 296px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
   }
   
   .user-box button:hover {
-    background-color: #316434;
+    background-color: #ffffff;
+    color: #000;
   }
   .search-box {
     position: relative; 

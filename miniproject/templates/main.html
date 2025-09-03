@@ -7,129 +7,231 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Serif+KR:wght@200..900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <!-- Flask의 static 폴더를 쓰는 경우 -->
+  <!-- Flask static -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <!-- 정적 경로를 아직 안 옮기셨다면 위 줄 대신 원래 경로 유지: <link rel="stylesheet" href="main.css"> -->
- <style>
-   .side-auth {
-     position: fixed;
-     right: 24px;
-     top: 50%;
-     transform: translateY(-50%);
-     display: flex;
-     flex-direction: column;
-     gap: 10px;
-     z-index: 1000;
-   }
-   .side-auth .btn {
-     display: inline-block;
-     padding: 10px 16px;
-     background: #37b43dff;
-     color: #fff;
-     border-radius: 8px;
-     text-decoration: none;
-     font-weight: 600;
-     box-shadow: 0 2px 8px rgba(0, 0, 0, 1);
-     text-align: center;
-   }
-   .side-auth .btn:hover { background:#53dd5c; color:#000; }
-   .side-auth .btn.outline {
-     background: transparent;
-     color: #ffffffff;
-     border: 2px solid #113f13;
-   }
-   .side-auth .btn.outline:hover { background:#113f13; color:#fff; }
-</style>
+
+  <style>
+    .side-auth {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+    }
+    .side-auth .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #37b43dff;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,1);
+      text-align: center;
+    }
+    .side-auth .btn:hover { background:#53dd5c; color:#000; }
+    .side-auth .btn.outline {
+      background: transparent;
+      color: #ffffffff;
+      border: 2px solid #113f13;
+    }
+    .side-auth .btn.outline:hover { background:#113f13; color:#fff; }
+
+    /* 최신글 리스트 간단 스타일 */
+    #post-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    #post-list li {
+      border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px;
+      display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: center;
+      cursor: pointer; transition: box-shadow .2s ease;
+    }
+    #post-list li:hover { box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+    .thumb {
+      width: 96px; height: 96px; border-radius: 8px; object-fit: cover; background: #f5f5f5;
+    }
+    .meta { font-size: 12px; color: #666; margin-top: 4px; }
+    .empty { color: #999; padding: 16px 0; }
+    .category-nav { display: flex; margin: 10px 0 20px; }
+    .category-nav button { padding: 8px 10px; border-radius: 10px; border: 1px solid #cbd5e1; background: #fff; cursor: pointer; }
+  </style>
 </head>
 <body>
   <header>
-    <button type="button"
-        class="write-btn"
-        onclick="location.href='{{ url_for('write_page') }}'">
-        글쓰기
+    <button type="button" class="write-btn" onclick="location.href='{{ url_for('write_page') }}'">
+      글쓰기
     </button>
     <h1>Jungle Food</h1>
     <div class="search-box">
-      <input type="text" placeholder="검색어를 입력하세요">
-      <i class="fa fa-search search-icon"></i>
+      <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+      <i class="fa fa-search search-icon" id="searchBtn"></i>
     </div>
   </header>
 
+  <!-- 카테고리: Flask의 다른 정적 html로 이동하지 않고, 동일 페이지에서 필터링 -->
   <nav class="category-nav">
-    <a href="../place/Cafateria.html"><button>식당</button></a>
-    <a href="../place/Outside.html"><button>외식</button></a>
-    <a href="../place/Delivery.html"><button>배달</button></a>
+    <button type="button" class="cat-btn" data-board="Cafeteria">식당</button>
+    <button type="button" class="cat-btn" data-board="Outside">외식</button>
+    <button type="button" class="cat-btn" data-board="Delivery">배달</button>
   </nav>
 
   <main>
     <section class="latest-posts">
       <h2>최신글</h2>
       <ul id="post-list">
-        <!-- 최신글이 추가될 위치 -->
+        <!-- 서버에서 가져온 최신글이 여기에 렌더링됩니다 -->
       </ul>
+      <div id="post-empty" class="empty" style="display:none;">게시글이 없습니다.</div>
+
+      <!-- 간단 페이지네이션(필요 시 노출) -->
+      <div id="pager" style="margin-top:12px; display:flex; gap:8px;">
+        <button type="button" id="prevBtn" style="display:none;">이전</button>
+        <span id="pageInfo" style="align-self:center;"></span>
+        <button type="button" id="nextBtn" style="display:none;">다음</button>
+      </div>
     </section>
 
-    <!-- ✅ 로그인 여부에 따라 표시 분기 -->
-  
-    <script>
-window.addEventListener("DOMContentLoaded", () => {
-  const posts = JSON.parse(localStorage.getItem("posts")) || [];
-  const postList = document.getElementById("post-list");
+    {% if user %}
+    <aside class="user-container">
+      <div class="user-box">
+        <h3>User Info</h3>
+        <p><span id="userId">{{ user.username }}</span>님 환영합니다!!</p>
 
-  postList.innerHTML = "";
-  posts.forEach((post, index) => {
-    const li = document.createElement("li");
-    li.textContent = post.title;
-    li.onclick = () => {
-      // 인덱스를 쿼리로 넘기고, Flask 라우트로 이동
-      location.href = "{{ url_for('post_view_page') }}?i=" + index;
-    };
-    postList.appendChild(li);
-  });
-});
-  </script>
+        <a class="btn danger"
+           href="{{ url_for('logout') }}"
+           style="display: inline-block; padding: 8px 16px; margin: 4px 2px;
+                  background-color: #dc3545; color: white; text-decoration: none;
+                  border-radius: 4px; text-align: center; font-size: 14px;
+                  transition: background-color 0.3s;"
+           onmouseover="this.style.backgroundColor='#c82333'"
+           onmouseout="this.style.backgroundColor='#dc3545'">Logout</a>
 
-{% if user %}
-  
-<aside class="user-container">
-    <div class="user-box">
-      <h3>회원정보</h3>
-      <p><span id="userId">{{ user.username }}</span>님 환영합니다!!</p>
-
-      <!-- GET으로 /logout 이동 - 인라인 스타일로 버튼처럼 꾸미기 -->
-      <a class="btn danger" 
-         href="{{ url_for('logout') }}"
-         style="display: inline-block; padding: 8px 16px; margin: 4px 2px; 
-                background-color: #dc3545; color: white; text-decoration: none; 
-                border-radius: 4px; text-align: center; font-size: 14px;
-                transition: background-color 0.3s;"
-         onmouseover="this.style.backgroundColor='#c82333'"
-         onmouseout="this.style.backgroundColor='#dc3545'">로그아웃</a>
-
-      <!-- POST로 회원탈퇴: 삭제는 반드시 POST -->
-      <form method="post"
-            action="{{ url_for('delete_account') }}"
-            onsubmit="return confirm('정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.');"
-            style="margin-top:8px:">
-        <button type="submit" class="btn danger">회원탈퇴</button>
-      </form>
+        <form method="post"
+              action="{{ url_for('delete_account') }}"
+              onsubmit="return confirm('정말 탈퇴하시겠습니까? 이 작업은 되돌릴 수 없습니다.');">
+          <button type="submit" class="btn danger">Delete Account</button>
+        </form>
+      </div>
+    </aside>
+    {% else %}
+    <div class="side-auth">
+      <a class="btn btn danger" href="{{ url_for('login_page') }}">로그인</a>
+      <a class="btn outline" href="{{ url_for('register_page') }}">회원가입</a>
     </div>
-  </aside>
-{% else %}
-  <!-- 비로그인 상태: 우측에 로그인/회원가입 버튼 표시 -->
-  <div class="side-auth">
-    <a class="btn btn danger" href="{{ url_for('login_page') }}">로그인</a>
-    <a class="btn outline" href="{{ url_for('register_page') }}">회원가입</a>
-  </div>
-{% endif %}
+    {% endif %}
   </main>
 
-  <!-- Flask static 사용 -->
-  <script src="{{ url_for('static', filename='js/main_new.js') }}" defer></script>
-  <!-- 정적 경로를 아직 안 옮기셨다면 위 줄 대신 원래 경로 유지: <script src="/miniproject/main_new/main_new.js" defer></script> -->
+  <!-- 필요 시 별도의 JS 파일로 분리 가능 -->
+  <script>
+  // 목록 DOM
+  const listEl   = document.getElementById("post-list");
+  const emptyEl  = document.getElementById("post-empty");
+  const prevBtn  = document.getElementById("prevBtn");
+  const nextBtn  = document.getElementById("nextBtn");
+  const pageInfo = document.getElementById("pageInfo");
+
+  // 상세 페이지 URL (Flask 라우트)
+  const postViewUrl = "{{ url_for('post_view_page') }}"; // /post/view
+
+  // 간단한 상태
+  let state = { page: 1, perPage: 10, pages: 1, total: 0, items: [] };
+
+  // 서버에서 목록 불러오기
+  async function loadPosts() {
+    try {
+      const params = new URLSearchParams({ page: String(state.page), per_page: String(state.perPage) });
+      const res = await fetch(`/api/posts?${params.toString()}`);
+      const data = await res.json();
+
+      if (!res.ok || !data.success) throw new Error(data.msg || "목록을 불러오지 못했습니다.");
+
+      const { items, page, pages, total } = data.data;
+      state.items = items || [];
+      state.page  = page;
+      state.pages = pages;
+      state.total = total;
+
+      renderPosts(state.items);
+      renderPager();
+    } catch (e) {
+      console.error(e);
+      listEl.innerHTML = "";
+      if (emptyEl) {
+        emptyEl.style.display = "block";
+        emptyEl.textContent = "목록을 불러오는 중 오류가 발생했습니다.";
+      }
+    }
+  }
+
+  // 목록 렌더링 (게시글 클릭 시 PostView.html로 이동)
+  function renderPosts(items) {
+    listEl.innerHTML = "";
+    if (!items || items.length === 0) {
+      if (emptyEl) {
+        emptyEl.style.display = "block";
+        emptyEl.textContent = "게시글이 없습니다.";
+      }
+      return;
+    }
+    if (emptyEl) emptyEl.style.display = "none";
+
+    items.forEach(p => {
+      const li = document.createElement("li");
+
+      // 썸네일(첫 번째 이미지가 있으면)
+      const imgSrc = (p.images && p.images.length > 0) ? p.images[0] : "";
+      const imgEl = imgSrc
+        ? `<img src="${imgSrc}" alt="thumb" style="width:76px;height:76px;object-fit:cover;border-radius:8px;">`
+        : `<div style="width:96px;height:96px;border-radius:8px;background:#f2f2f2;display:flex;align-items:center;justify-content:center;color:#aaa;">No Img</div>`;
+
+      const created = new Date(p.created_at).toLocaleString();
+      const meta    = `게시판: ${p.board} · 작성자: ${p.author} · ${created}`;
+
+      // a 태그로 감싸서 /post/view?id=<id>로 이동
+      li.innerHTML = `
+        <a href="${postViewUrl}?id=${encodeURIComponent(p.id)}" style="display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center;text-decoration:none;color:inherit;">
+          ${imgEl}
+          <div>
+            <div style="font-weight:700;font-size:16px;line-height:1.3;">${escapeHtml(p.title)}</div>
+            <div style="font-size:12px;color:#666;margin-top:4px;">${meta}</div>
+            <div style="font-size:13px;color:#444;margin-top:4px;">
+              ${escapeHtml((p.content||"")).slice(0, 120)}${(p.content && p.content.length > 120) ? '…' : ''}
+            </div>
+          </div>
+        </a>
+      `;
+      listEl.appendChild(li);
+    });
+  }
+
+  // 페이지네이션(필요 없으면 이 함수와 DOM 제거)
+  function renderPager() {
+    if (!prevBtn || !nextBtn || !pageInfo) return;
+    pageInfo.textContent = state.pages > 0 ? `페이지 ${state.page} / ${state.pages} (총 ${state.total}개)` : "";
+    prevBtn.style.display = (state.page > 1) ? "inline-block" : "none";
+    nextBtn.style.display = (state.page < state.pages) ? "inline-block" : "none";
+    prevBtn.onclick = () => { if (state.page > 1) { state.page--; loadPosts(); } };
+    nextBtn.onclick = () => { if (state.page < state.pages) { state.page++; loadPosts(); } };
+  }
+
+  // XSS 방지용
+  function escapeHtml(str) {
+    return (str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // 초기 로드
+  document.addEventListener("DOMContentLoaded", loadPosts);
+</script>
 </body>
 </html>
-.

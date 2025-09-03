@@ -1,18 +1,22 @@
-<!-- templates/PostView.html -->
+<!-- templates/PostView.html (수정본) -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>{{ (post.title if post else '게시글 상세')|e }} - JungleFood</title>
+  <title>게시글 상세 - JungleFood</title>
 
-  <!-- Bulma & CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/PostView.css') }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
 </head>
 <body class="has-background-dark has-text-white">
 
-  <!-- 헤더 -->
   <header class="navbar has-background-dark p-3">
     <div class="title">
       <h1 class="title has-text-success">게시글 상세</h1>
@@ -20,52 +24,33 @@
     <a href="{{ url_for('main_page') }}" class="button is-info is-small">메인으로</a>
   </header>
 
-  <!-- 메인 -->
-  <main class="container mt-5"
-        id="post-root"
-        data-post-id="{{ post._id if post else '' }}"
-        data-like-api="{{ ('/api/posts/' ~ post._id ~ '/like') if post else '' }}"
-        data-comment-api="{{ ('/api/posts/' ~ post._id ~ '/comments') if post else '' }}">
-
+  <main class="container mt-5" id="post-root">
     <!-- 제목 + 작성자/작성일 -->
     <div class="level">
       <div class="level-left">
-        <h2 class="title is-3 has-text-white">
-          {{ (post.title if post else '제목 없음')|e }}
-        </h2>
+        <h2 id="pv-title" class="title is-3 has-text-white">제목 로딩중…</h2>
       </div>
       <div class="level-right">
-        <p class="subtitle is-6 has-text-grey-light">
-          작성자: {{ (post.author if post else '알수없음')|e }}
-          {% if post and post.createdAt %}
-            · {{ post.createdAt.strftime("%Y-%m-%d %H:%M") }}
-          {% endif %}
-        </p>
+        <p id="pv-meta" class="subtitle is-6 has-text-grey-light"></p>
       </div>
     </div>
 
     <!-- 본문 -->
     <div class="box has-background-grey-darker has-text-white">
-      <pre style="white-space:pre-wrap; margin:0">
-{{ (post.content if post else '내용이 없습니다.')|e }}
-      </pre>
+      <pre id="pv-content" style="white-space:pre-wrap; margin:0">내용 로딩중…</pre>
     </div>
 
-    <!-- (선택) 이미지 영역 -->
-    <div class="box has-background-grey-darker has-text-white mt-3">
-      <p>이미지가 올라올 예정</p>
-      <!-- 추후 <img src="{{ post.image_url }}" alt=""> 처럼 교체 -->
+    <!-- 이미지 -->
+    <div id="pv-images" class="box has-background-grey-darker has-text-white mt-3">
+      <p class="has-text-grey">이미지가 없습니다.</p>
     </div>
 
     <!-- 좋아요 -->
     <div class="field mt-3">
-      <button id="like-btn" class="button is-light" {% if not post %}disabled{% endif %}>
-        <span class="icon">
-          <i id="like-icon"
-             class="{% if post and post.liked %}fas has-text-danger{% else %}far has-text-grey{% endif %} fa-heart"></i>
-        </span>
-        <span id="like-text">{% if post and post.liked %}좋아요 취소{% else %}좋아요{% endif %}</span>
-        <span id="like-count" style="margin-left:6px">({{ post.likes_count|default(0) }})</span>
+      <button id="like-btn" class="button is-light">
+        <span class="icon"><i id="like-icon" class="far has-text-grey fa-heart"></i></span>
+        <span id="like-text">Like It!</span>
+        <span id="like-count" style="margin-left:6px">(0)</span>
       </button>
     </div>
 
@@ -77,9 +62,7 @@
           <textarea id="comment-input" class="textarea" placeholder="댓글을 입력하세요"></textarea>
         </div>
         <div class="control mt-2">
-          <button id="comment-btn" class="button is-success" {% if not post %}disabled{% endif %}>
-            댓글 달기
-          </button>
+          <button id="comment-btn" class="button is-success">댓글 달기</button>
         </div>
       </div>
     {% else %}
@@ -87,20 +70,9 @@
     {% endif %}
 
     <!-- 댓글 목록 -->
-    <div id="comment-list" class="mt-4">
-      {% for c in (comments|default([])) %}
-        <div class="box has-background-grey-darker has-text-white mt-2">
-          <p class="subtitle is-6 has-text-grey-light">
-            {{ c.author|default('익명')|e }}
-            {% if c.createdAt %} · {{ c.createdAt.strftime("%Y-%m-%d %H:%M") }}{% endif %}
-          </p>
-          <p style="white-space:pre-wrap">{{ c.content|default('')|e }}</p>
-        </div>
-      {% endfor %}
-    </div>
+    <div id="comment-list" class="mt-4"></div>
   </main>
 
-  <!-- 아이콘 & 페이지 스크립트 -->
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script defer src="{{ url_for('static', filename='js/PostView.js') }}"></script>
 </body>
