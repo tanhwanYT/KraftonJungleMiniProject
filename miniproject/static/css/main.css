@@ -17,12 +17,14 @@ body {
   }
   
   header h1 {
+    position: relative;
     font-family: "Bebas Neue", sans-serif;
     font-weight: 200;
     font-style: normal;
     color: #15a502;
     font-size: 80px;
     margin: 0 auto;
+    text-align: center;
   }
   
   .write-btn {
@@ -193,6 +195,7 @@ body {
   font-size: 16px;
   line-height: 1.3;
   color: #ffffff !important;  /* 흰색 강제 적용 */
+  text-align: left;
 }
 .meta-row {
   display: flex;

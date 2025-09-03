@@ -3,6 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
   <title>배달 갤러리 - Jungle Food</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
@@ -22,19 +27,149 @@
       color: white;
     }
     button:hover { background: #e5533d; }
+    header {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #000;
+  border-bottom: 2px solid #0e5f04;
+  gap: 20px;
+}
+
+header h1 {
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+  color: #15a502;
+  font-size: 10px;
+  margin: 0 auto;
+  margin-left: 10px;
+}
+
+/* 레이아웃 */
+main {
+  display: flex;
+  gap: 30px;
+  padding: 20px 30px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* 좌측: 게시글 목록 박스 */
+.board-posts { /* Cafateria.html에서 <section class="board-posts"> 로 사용 권장 */
+  flex: 2;
+  max-height: 500px;       /* 필요 없으면 제거 */
+  overflow-y: auto;        /* 필요 없으면 제거 */
+  background-color: #1c1c1c;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.board-posts h2 {
+  margin-top: 5px;
+  font-size: 50px;
+}
+
+/* 목록 기본 */
+.board-posts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.board-posts li {
+  padding: 10px;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+.board-posts li:hover {
+  background-color: #333;
+}
+/* 목록 아이템 - 카드 형태 */
+.post-link {
+  display: grid;
+  grid-template-columns: 96px 1fr; /* 왼쪽 고정 썸네일 */
+  gap: 12px;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 정보 래퍼 */
+.post-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 제목: 흰색 고정 */
+.title-text {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.3;
+  color: #ffffff !important;
+  text-align: left;
+}
+
+/* 메타 한 줄 */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: #8a8a8a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.meta-row span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 썸네일: 고정 크기 + 중앙 크롭 */
+.thumb {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: center;
+  background: #f5f5f5;
+  display: block;
+}
   </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Delivery.css') }}">
 </head>
 <body>
   <header>
-    <h1>배달 갤러리</h1>
+    <h1>Delivery</h1>
     <a href="{{ url_for('main_page') }}" class="back-btn">메인으로</a>
   </header>
 
   <h1>오늘 뭐 먹지? 🍴</h1>
   <button onclick="startRoulette()">랜덤 추천 받기</button>
   <div id="menu">메뉴를 추천해드립니다!</div>
+  <main>
+  <section class="board-posts">
+    <h3>Article</h3>
+    <ul id="post-list">
+      <!-- JS로 <li> 내부를 아래와 같이 채움 -->
+      <!--
+      <li>
+        <a href="/post/view?id=..." class="post-link">
+          <img src="..." alt="thumb" class="thumb">
+          <div class="post-info">
+            <div class="title-text">게시글 제목</div>
+            <div class="meta-row">📂 Cafeteria | 👤 author | 🕒 2025-09-03 12:34:56</div>
+          </div>
+        </a>
+      </li>
+      -->
+    </ul>
+  </section>
 
+  <!-- 우측 영역(선택) -->
+  </main>
   <script>
     const menus = [
       "프랭크버거",
@@ -129,36 +264,50 @@ function startRoulette() {
 
   loadPosts();
 }
+
+window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Delivery&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
+
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
+    });
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  });
+
+  // 페이지 로드 시 실행
+  loadPosts();
+  window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Cafeteria&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
+
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
+    });
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  });
   </script>
 
-  <main>
 
-    <table class="post-list">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>날짜</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>엽떡 최소주문 금액 맞출사람</td>
-          <td>2025-09-01</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>짜장면 같이 시켜먹을분?</td>
-          <td>2025-08-28</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>아니 토요일에 쉬는 치킨집이 어딨어;;</td>
-          <td>2025-08-25</td>
-        </tr>
-      </tbody>
-    </table>
-  </main>
 </body>
 </html>

@@ -1,66 +1,174 @@
-body {
-    margin: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #1e1e1e;
-    color: #fff;
-  }
-  
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    padding: 15px 20px;
-    border-bottom: 2px solid #444;
-  }
-  
-  header h1 {
-    font-size: 24px;
-    margin: 0;
-  }
-  
-  .back-btn {
-    background: #111;
-    color: #0f0;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-decoration: none;
-    box-shadow: 0 0 5px #0f0, 0 0 10px #0f0 inset;
-  }
-  
-  .back-btn:hover {
-    background: #0f0;
-    color: #111;
-    box-shadow: 0 0 10px #0f0, 0 0 20px #0f0, 0 0 40px #0f0;
-  }
-  
-  main {
-    padding: 20px;
-    max-height: calc(100vh - 70px); 
-    overflow-y: auto;
-  }
-  
-  .post-list {
-    width: 80%;
-    border-collapse: collapse;
-    font-size: 15px; 
-    margin: 0 auto; 
-  }
-  
-  .post-list th, .post-list td {
-    border-bottom: 1px solid #444;
-    padding: 12px 10px;
-    text-align: left;
-  }
-  
-  .post-list th {
-    background-color: #2a2a2a;
-    font-weight: bold;
-  }
-  
-  .post-list tr:hover {
-    background-color: #2f2f2f;
-    cursor: pointer;
-  }
-  
+/* ===============================
+   Outside (Restaurant) Board Styles
+   파일: static/css/Outside.css
+   =============================== */
+
+:root {
+  --bg: #252525;
+  --panel: #1c1c1c;
+  --brand: #15a502;   /* 상단 타이틀 포인트 컬러 */
+  --line: #0e5f04;   /* 상단 보더라인 */
+  --txt: #ffffff;
+  --muted: #8a8a8a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--txt);
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+/* 헤더 */
+header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 30px;
+  background: #000;
+  border-bottom: 2px solid var(--line);
+}
+
+header h1 {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  color: var(--brand);
+  font-size: 72px;   /* 메인과 유사한 크기 */
+  line-height: 1;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #111;
+  color: #0ff;
+  text-decoration: none;
+  box-shadow: 0 0 5px #0ff, 0 0 10px #0ff inset;
+  white-space: nowrap;
+}
+.back-btn:hover {
+  background: #0ff;
+  color: #111;
+  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff;
+}
+
+/* 지도 영역 */
+#map {
+  width: min(1500px, 100%);
+  height: 350px;
+  margin: 16px auto 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+/* 메인 레이아웃 */
+main {
+  width: min(1200px, 90%);
+  margin: 20px auto 60px;
+}
+
+/* 게시글 리스트 박스 */
+.board-posts {
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.board-posts h3 {
+  margin: 0 0 16px;
+  font-size: 42px;
+  letter-spacing: 0.5px;
+}
+
+/* 리스트 기본 */
+#post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#post-list li {
+  border-bottom: 1px solid #333;
+  transition: background .2s ease, transform .08s ease;
+}
+#post-list li:hover {
+  background: #2A2A2A;
+  transform: translateY(-1px);
+}
+
+/* 카드(링크) */
+.post-link {
+  display: grid;
+  grid-template-columns: 96px 1fr; /* 왼쪽 썸네일 고정폭 */
+  gap: 12px;
+  align-items: center;
+  padding: 12px 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 썸네일: 고정 크기 + 중앙 크롭 */
+.thumb {
+  width: 96px;
+  height: 96px;
+  border-radius: 8px;
+  object-fit: cover;       /* 비율 유지하며 잘라내기 */
+  object-position: center; /* 중앙 기준 크롭 */
+  background: #2f2f2f;
+  display: block;
+}
+
+/* 썸네일 없을 때 대체 박스 */
+.thumb.empty {
+  display: grid;
+  place-items: center;
+  color: #aaa;
+  font-size: 12px;
+}
+
+/* 우측 정보 */
+.post-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* 제목: 흰색 고정(우선순위 높임) */
+.title-text {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.25;
+  color: #ffffff !important;
+}
+
+/* 메타: 한 줄 정렬 + 말줄임 */
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;         /* 줄바꿈 방지 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+  header h1 { font-size: 52px; }
+  .post-link { grid-template-columns: 72px 1fr; }
+  .thumb { width: 72px; height: 72px; }
+}

@@ -21,12 +21,14 @@ body {
   }
   
   h2 {
+    margin-top: 0;
     text-align: center;
-    font-family: "Anton", sans-serif;
-    font-weight: 400;
-    font-size: 45px;
+    font-size: 65px;
     color: #24cf0d;
     margin-bottom: 20px;
+    font-family: "Bebas Neue", sans-serif;
+    font-weight: 200;
+    font-style: normal;
   }
   
   input {

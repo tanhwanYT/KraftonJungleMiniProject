@@ -3,22 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>식당 갤러리 - Jungle Food</title>
+  <title>Cafeteria - Jungle Food</title>
   <style>
     body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
-    h1 { margin-bottom: 20px; }
+    h1 { margin-bottom: 10px; 
+        font-family: "Bebas Neue", sans-serif;
+        font-weight: 300;
+        font-style: normal;
+      }
     #timer { font-size: 36px; font-weight: bold; color: #ff6347; }
   </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Cafateria.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
 </head>
 <body>
   <header>
-    <h1>식당 갤러리</h1>
+    <h1>Cafeteria</h1>
     <a href="{{ url_for('main_page') }}" class="back-btn">메인으로</a>
   </header>
-  <h1>다음 식사까지 남은 시간</h1>
+  <h2>다음 식사까지 남은 시간</h2>
   <div id="timer">00:00:00</div>
   <h3>다시 태어나는게 더 빠르겠네요</h3>
+  <main>
+  <section class="board-posts">
+    <h3>Article</h3>
+    <ul id="post-list">
+      <!-- JS로 <li> 내부를 아래와 같이 채움 -->
+      <!--
+      <li>
+        <a href="/post/view?id=..." class="post-link">
+          <img src="..." alt="thumb" class="thumb">
+          <div class="post-info">
+            <div class="title-text">게시글 제목</div>
+            <div class="meta-row">📂 Cafeteria | 👤 author | 🕒 2025-09-03 12:34:56</div>
+          </div>
+        </a>
+      </li>
+      -->
+    </ul>
+  </section>
+
+  <!-- 우측 영역(선택) -->
+  </main>
   <script>
     function updateTimer() {
       const now = new Date();
@@ -61,57 +91,47 @@
     setInterval(updateTimer, 1000);
     updateTimer(); // 페이지 로딩 시 바로 실행
 
-    function loadPosts() {
-    const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-    const tbody = document.getElementById("postList");
-    tbody.innerHTML = "";
-    
-    const deliveryPosts = posts.filter(p => p.board === "Cafateria");
+      window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Cafeteria&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
 
-    deliveryPosts.forEach((post, idx) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${idx + 1}</td>
-        <td>${post.title}</td>
-        <td>${post.created_at}</td>
-      `;
-      tbody.appendChild(tr);
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
     });
-  }
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  });
 
   // 페이지 로드 시 실행
   loadPosts();
+  window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Cafeteria&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
 
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
+    });
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  });
   </script>
-
-  <main>
-
-    <table class="post-list">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>날짜</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>오늘 사이드메뉴 민초무침이다!</td>
-          <td>2025-09-01</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>가끔식 유리판에서 불쇼하는데 ...</td>
-          <td>2025-08-28</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>점심시간에 식판 밖으로 들고가면 벌점임?</td>
-          <td>2025-08-25</td>
-        </tr>
-      </tbody>
-    </table>
-  </main>
 </body>
 </html>

@@ -2,11 +2,17 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8"><title>회원가입</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 </head>
 <body>
-  <h2>회원가입</h2>
+  
   <form id="registerForm">
+    <h2>Sign in</h2><br>
     <input id="username" placeholder="아이디" required>
     <input id="password" type="password" placeholder="비밀번호" required>
     <input id="confirm"  type="password" placeholder="비밀번호 확인" required>

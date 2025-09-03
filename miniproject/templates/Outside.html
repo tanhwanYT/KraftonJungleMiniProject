@@ -5,65 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>외식 갤러리 - Jungle Food</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/Outside.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
+    rel="stylesheet">
 </head>
 <body>
   <header>
     <h1>Restaurant</h1>
     <a href="{{ url_for('main_page') }}" class="back-btn">메인으로</a>
   </header>
-
-  <main>
-    <div id="map" style="width:100%;height:350px;"></div>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=602f6de5c313013c3c677ff954acc4d0&libraries=services"></script>
-  <script type="text/javascript">
-    var infowindow = new kakao.maps.InfoWindow({zIndex:1});
-    var mapContainer = document.getElementById('map'), 
-    mapOption = { 
-        center: new kakao.maps.LatLng(37.269703996199404, 127.20784395278321), 
-        level: 4
-    };
-    var map = new kakao.maps.Map(mapContainer, mapOption); 
-    var ps = new kakao.maps.services.Places(map); 
-    ps.categorySearch('FD6', placesSearchCB, {useMapBounds:true}); 
-    ps.categorySearch('CS2', placesSearchCB, {useMapBounds:true});
-    function placesSearchCB (data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
-        for (var i=0; i<data.length; i++) {
-            displayMarker(data[i]);    
-        }       
-      }
-    }
-    function displayMarker(place) {
-    // 마커를 생성하고 지도에 표시합니다
-    var marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x) 
-    });
-
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', function() {
-        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-        infowindow.open(map, marker);
-    });
-}
-    var markerPosition  = new kakao.maps.LatLng(37.269703996199404, 127.20784395278321); 
-    var marker = new kakao.maps.Marker({ 
-      position: markerPosition
-    }); 
-    marker.setMap(map);
-
-    var mapContainer = document.getElementById('map');
-    mapContainer.style.width = '1500px';
-    mapContainer.style.height = '350px'; 
-    map.relayout();
-
-    function loadPosts() {
+  
+  <div id="map" style="width:100%;height:350px;"></div>
+  <!-- Kakao Map SDK -->
+     <main>
+      <section class="board-posts">
+        <h3>Article</h3>
+          <ul id="post-list">
+          </ul>
+       </section>
+     </main>
+  <script>
+  function loadPosts() {
     const posts = JSON.parse(localStorage.getItem('posts') || '[]');
     const tbody = document.getElementById("postList");
     tbody.innerHTML = "";
 
-    const deliveryPosts = posts.filter(p => p.board === "Outside");
+    // Delivery 게시판 글만 필터링
+    const deliveryPosts = posts.filter(p => p.board === "Delivery");
 
     deliveryPosts.forEach((post, idx) => {
       const tr = document.createElement("tr");
@@ -76,37 +46,47 @@
     });
   }
 
-  // 페이지 로드 시 실행
+
+  window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Delivery&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
+
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
+    });
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+  });
+
   loadPosts();
+  window.addEventListener("DOMContentLoaded", async () => {
+    const res = await fetch(`/api/posts?board=Cafeteria&page=1&per_page=10`);
+    const json = await res.json();
+    if (!res.ok || !json.success) { alert("목록을 불러오지 못했습니다."); return; }
 
+    const list = document.getElementById("post-list");
+    list.innerHTML = "";
+    json.data.items.forEach(p => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <a href="/post/view?id=${encodeURIComponent(p.id)}" class="post-link">
+          <div class="title-text">${escapeHtml(p.title)}</div>
+          <div class="meta-row">📂 ${p.board} &nbsp;|&nbsp; 👤 ${p.author} &nbsp;|&nbsp; 🕒 ${new Date(p.created_at).toLocaleString()}</div>
+        </a>`;
+      list.appendChild(li);
+    });
+
+    function escapeHtml(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+    });
   </script>
-
-    <table class="post-list">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>날짜</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>맛있는 파스타 집 추천</td>
-          <td>2025-09-01</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>동네 삼겹살 맛집</td>
-          <td>2025-08-28</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>가성비 초밥 뷔페</td>
-          <td>2025-08-25</td>
-        </tr>
-      </tbody>
-    </table>
-  </main>
 </body>
 </html>

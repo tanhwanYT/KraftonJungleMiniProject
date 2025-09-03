@@ -1,6 +1,6 @@
-html, body {
+body {
     height: 100%;
-    background-color: #141414;
+    background-color: #000000;
   }
   /* 제목과 버튼 간격 */
   .title {
@@ -20,6 +20,7 @@ html, body {
     font-family: "Bebas Neue", sans-serif;
     font-weight: 200;
     font-style: normal;
+    text-align: center;
   }
 
   .navbar .button.is-info {
