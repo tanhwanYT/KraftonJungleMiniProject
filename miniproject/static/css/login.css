@@ -6,9 +6,21 @@ body {
   height: 100vh;
   background-color: #2e2e2e;
   margin: 0;
+  flex-direction: column; /* 제목(h2)랑 폼 세로 정렬 */
 }
 
-.login-box {
+h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 65px;
+  color: #24cf0d;
+  margin-bottom: 20px;
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+form {
   width: 90%;
   max-width: 400px;
   padding: 30px;
@@ -20,18 +32,7 @@ body {
   box-sizing: border-box;
 }
 
-.login-box h2 {
-  margin-top: 0;
-  text-align: center;
-  font-size: 65px;
-  color: #24cf0d;
-  margin-bottom: 20px;
-  font-family: "Bebas Neue", sans-serif;
-  font-weight: 200;
-  font-style: normal;
-}
-
-.login-box input {
+form input {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -42,12 +43,12 @@ body {
   box-sizing: border-box;
 }
 
-.login-box input:focus {
+form input:focus {
   outline: 2px solid #24cf0d;
   background: #444;
 }
 
-#sign-in {
+form button {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
@@ -58,7 +59,7 @@ body {
   cursor: pointer;
 }
 
-#sign-in:hover {
+form button:hover {
   background: #53dd5c;
   color: #000;
 }
@@ -71,7 +72,7 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .login-box {
+  form {
     max-width: 500px;
   }
 }
