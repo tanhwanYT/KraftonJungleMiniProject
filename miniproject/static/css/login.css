@@ -1,46 +1,77 @@
-body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; }
-    .login-box { width:300px; padding:20px; border:1px solid #8d8d8d; border-radius:10px; }
-    .login-box h2 { text-align:center; }
-    .login-box input { width:100%; padding:10px; margin:10px 0; }
-    .login-box button { width:100%; padding:10px; background:#439146; color:white; border:none; border-radius:5px; margin-bottom: 7px; margin-top: 5px;}
-    .login-box button:hover { background:#316434; }
-
 body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   background-color: #2e2e2e;
-}
-.login-box input {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  box-sizing: border-box; 
-  border-radius: 3px;
+  margin: 0;
 }
 
 .login-box {
-  width: 90%;              /* 작은 화면에서는 화면의 90% 차지 */
-  max-width: 400px;        /* 큰 화면에서도 최대 400px까지만 */
+  width: 90%;
+  max-width: 400px;
   padding: 30px;
   border: 3px solid #ccc;
   border-radius: 10px;
   background: #000000;
-  /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.login-box h2 {
+  margin-top: 0;
+  text-align: center;
+  font-size: 65px;
+  color: #24cf0d;
+  margin-bottom: 20px;
+  font-family: "Bebas Neue", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: none;
+  background: #333;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.login-box input:focus {
+  outline: 2px solid #24cf0d;
+  background: #444;
 }
 
 #sign-in {
-  width:100%; padding:10px; background:#113f13; color:white; border:none; border-radius:5px; margin-top: 6px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #113f13;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-#sign-in:hover{ background:#53dd5c; }
-
-.login-box h2 {
-  font-family: "Anton", sans-serif;
-  font-weight: 400;
-  font-style: normal;   
-  font-size: 50px;
-  color: #24cf0d;
+#sign-in:hover {
+  background: #53dd5c;
+  color: #000;
 }
-@media (min-width: 1024px) { /* 데스크탑 기준 */
+
+#msg {
+  margin-top: 12px;
+  color: #e74c3c;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
   .login-box {
-    max-width: 500px;   /* 데스크탑에서는 좀 더 크게 */
+    max-width: 500px;
   }
 }
