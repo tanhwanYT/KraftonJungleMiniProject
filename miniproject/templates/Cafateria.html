@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>식당 갤러리 - Jungle Food</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
+    h1 { margin-bottom: 20px; }
+    #timer { font-size: 36px; font-weight: bold; color: #ff6347; }
+  </style>
+  <link rel="stylesheet" href="Cafateria.css">
+</head>
+<body>
+  <header>
+    <h1>식당 갤러리</h1>
+    <a href="../main/main.html" class="back-btn">메인으로</a>
+  </header>
+  <h1>다음 식사까지 남은 시간</h1>
+  <div id="timer">00:00:00</div>
+  <h3>다시 태어나는게 더 빠르겠네요</h3>
+  <script>
+    function updateTimer() {
+      const now = new Date();
+
+      // 오늘 점심과 저녁 시간 설정
+      const lunch = new Date();
+      lunch.setHours(12, 0, 0, 0); // 12:00:00
+
+      const dinner = new Date();
+      dinner.setHours(18, 0, 0, 0); // 18:00:00
+
+      // 다음 목표 시간 선택
+      let target;
+      if (now < lunch) {
+        target = lunch;
+      } else if (now < dinner) {
+        target = dinner;
+      } else {
+        // 이미 저녁이 지나면 내일 점심까지
+        target = new Date();
+        target.setDate(now.getDate() + 1);
+        target.setHours(12, 0, 0, 0);
+      }
+
+      // 남은 시간 계산
+      const diff = target - now; // 밀리초
+      const hours = Math.floor(diff / 1000 / 60 / 60);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      // 2자리 포맷
+      const h = String(hours).padStart(2, '0');
+      const m = String(minutes).padStart(2, '0');
+      const s = String(seconds).padStart(2, '0');
+
+      document.getElementById('timer').innerText = `${h}:${m}:${s}`;
+    }
+
+    // 1초마다 업데이트
+    setInterval(updateTimer, 1000);
+    updateTimer(); // 페이지 로딩 시 바로 실행
+  </script>
+
+  <main>
+
+    <table class="post-list">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>날짜</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>오늘 사이드메뉴 민초무침이다!</td>
+          <td>2025-09-01</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>가끔식 유리판에서 불쇼하는데 ...</td>
+          <td>2025-08-28</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>점심시간에 식판 밖으로 들고가면 벌점임?</td>
+          <td>2025-08-25</td>
+        </tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
