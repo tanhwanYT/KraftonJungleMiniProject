@@ -3,11 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>외식 갤러리 - Jungle Food</title>
+  <title>배달 갤러리 - Jungle Food</title>
   <style>
-    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
-    #menu { font-size: 24px; font-weight: bold; margin-top: 20px; }
-    button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 100px; }
+    #menu {
+      font-size: 36px;
+      font-weight: bold;
+      margin-top: 40px;
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      background: #ff6347;
+      color: white;
+    }
+    button:hover { background: #e5533d; }
   </style>
   <link rel="stylesheet" href="Delivery.css">
 </head>
@@ -18,7 +32,7 @@
   </header>
 
   <h1>오늘 뭐 먹지? 🍴</h1>
-  <button onclick="recommendMenu()">랜덤 추천 받기</button>
+  <button onclick="startRoulette()">랜덤 추천 받기</button>
   <div id="menu">메뉴를 추천해드립니다!</div>
 
   <script>
@@ -33,7 +47,7 @@
       "김밥",
       "덮밥",
       "짬뽕",
-      "테토남쌀국수",
+      "베트남쌀국수",
       "이삭토스트",
       "그냥 굶기",
       "설빙",
@@ -57,12 +71,39 @@
       "칸쵸",
       "규카츠"
     ];
+    let spinning = false; // 중복 실행 방지
 
-    function recommendMenu() {
-      const randomIndex = Math.floor(Math.random() * menus.length);
-      const menu = menus[randomIndex];
-      document.getElementById("menu").innerText = "추천 메뉴: " + menu;
+function startRoulette() {
+  if (spinning) return; // 이미 실행 중이면 무시
+  spinning = true;
+
+  const menuEl = document.getElementById("menu");
+  let count = 0;
+  let speed = 80; // 시작 속도(ms)
+
+  function spin() {
+    const randomIndex = Math.floor(Math.random() * menus.length);
+    menuEl.innerText = menus[randomIndex];
+    menuEl.style.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+    menuEl.style.transform = "scale(1.2)";
+    setTimeout(() => menuEl.style.transform = "scale(1)", 100);
+
+    count++;
+
+    if (count > 15) { // 15번 돌고 멈춤
+      const finalMenu = menus[Math.floor(Math.random() * menus.length)];
+      menuEl.innerText = "띵! 오늘은 👉 " + finalMenu;
+      menuEl.style.color = "#ff6347";
+      menuEl.style.transform = "scale(1.5)";
+      spinning = false; // 다시 실행 가능
+    } else {
+      speed += 40; // 점점 느려짐
+      setTimeout(spin, speed); // 다음 회전 예약
     }
+  }
+
+  spin();
+}
   </script>
 
   <main>
