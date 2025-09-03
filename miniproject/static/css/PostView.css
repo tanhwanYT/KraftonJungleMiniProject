@@ -5,7 +5,7 @@ html, body {
   /* 제목과 버튼 간격 */
   .title {
     padding: 10px;
-    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0);
     width: 100%;
     height: 100%;
   }

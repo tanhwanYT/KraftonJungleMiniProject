@@ -444,6 +444,20 @@ def delete_post_api(id):
         print(f"게시글 삭제 오류: {e}")
         return jsonify(success=False, msg="서버 오류가 발생했습니다."), 500
 
+@app.get("/Cafeteria")
+def cafeteria_page():
+    user = session.get("user")
+    return render_template("Cafateria.html", user=user, board="Cafeteria")
+
+@app.get("/Outside")
+def outside_page():
+    user = session.get("user")
+    return render_template("Outside.html", user=user, board="Outside")
+
+@app.get("/Delivery")
+def delivery_page():
+    user = session.get("user")
+    return render_template("Delivery.html", user=user, board="Delivery")
 # ──────────────────────────────────────────────────────────────────────────
 # 헬스 체크
 # ──────────────────────────────────────────────────────────────────────────
